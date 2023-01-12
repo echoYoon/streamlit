@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import pandas_datareader as pdr 
+from pandas_datareader import data as pdr
 from datetime import datetime, timedelta
 import yfinance as yf
 

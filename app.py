@@ -1,38 +1,47 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-	
-st.title('우버 픽업 인 뉴욕')
+import pandas_datareader as pdr 
+from datetime import datetime, timedelta
+import yfinance as yf
 
 
+streamlit_style = """
+			<style>
+			@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+			html, body, [class*="css"]  {
+			font-family: 'Nanum Gothic', sans-serif;
+			}
+			</style>
+			"""
+st.markdown(streamlit_style, unsafe_allow_html=True)
+
+st.sidebar.header('Menu')
 
 
-DATE_COLUMN = 'date/time'
-DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
-            'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
+sevendayago = datetime.today() - timedelta(7)
 
-@st.cache
-def load_data(nrows):
-    data = pd.read_csv(DATA_URL, nrows=nrows)
-    lowercase = lambda x: str(x).lower()
-    data.rename(lowercase, axis='columns', inplace=True)
-    data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
-    return data
+start_date = st.sidebar.date_input('시작일', sevendayago)
+end_date = st.sidebar.date_input('종료일', datetime.today())
 
-data_load_state = st.text('Loading data...')
-data = load_data(10000)
-data_load_state.text("Done! (using st.cache)")
 
-if st.checkbox('Show raw data'):
-    st.subheader('Raw data')
-    st.write(data)
+st.title('📈 삼성전자 주가')
 
-st.subheader('Number of pickups by hour')
-hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
-st.bar_chart(hist_values)
+st.write('''
+마감 가격과 거래량을 차트로 보여줍니다!
+''')
 
-hour_to_filter = st.slider('hour', 0, 23, 17)
-filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
+st.markdown("----", unsafe_allow_html=True)
 
-st.subheader('Map of all pickups at %s:00' % hour_to_filter)
-st.map(filtered_data)
+
+yf.pdr_override()
+
+# https://finance.yahoo.com/quote/005930.KS?p=005930.KS
+dr = pdr.get_data_yahoo('005930.KS',start_date,end_date)
+
+st.write('''마감 가격''')
+st.line_chart(dr.Close)
+
+st.write('''거래량''')
+st.line_chart(dr.Volume)

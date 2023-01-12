@@ -10,4 +10,3 @@ scikit-learn==1.0.2
 plotly==5.6.0
 cvxopt==1.2.7
 pyportfolioopt==1.5.2
-glpk

@@ -5,6 +5,7 @@ from pandas_datareader import data as pdr
 from datetime import datetime, timedelta
 import yfinance as yf
 
+st.set_page_config(layout="wide")
 
 streamlit_style = """
 			<style>

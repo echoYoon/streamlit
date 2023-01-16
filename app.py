@@ -2,9 +2,9 @@ import streamlit as st
 from pandas_datareader import data as pdr
 from datetime import datetime, timedelta
 import yfinance as yf
+from streamlit_extras.let_it_rain import rain
 
-yf.pdr_override()
-
+# config
 st.set_page_config(layout="wide", page_title="Hello", page_icon="🏠")
 
 streamlit_style = """
@@ -17,6 +17,19 @@ streamlit_style = """
 			</style>
 			"""
 st.markdown(streamlit_style, unsafe_allow_html=True)
+
+# rain
+rain(
+    emoji="❄️",
+    font_size=13,
+    falling_speed=8,
+    animation_length="infinite",
+)
+
+
+yf.pdr_override()
+
+
 
 dict = {'삼성전자':'005930.KS', '한화시스템':'272210.KS', '대우조선해양': '042660.KS'}
 

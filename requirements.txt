@@ -3,3 +3,4 @@ datetime==4.3
 pycryptodomex==3.16.0
 yfinance==0.2.3
 pandas_datareader==0.10.0
+streamlit_extras

@@ -7,6 +7,9 @@ from streamlit_extras.let_it_rain import rain
 import pandas as pd
 import numpy as np
 
+
+
+
 # config
 st.set_page_config(layout="wide", page_title="Hello", page_icon="🏠")
 
@@ -25,6 +28,29 @@ streamlit_style = """
 			</style>
 			"""
 st.markdown(streamlit_style, unsafe_allow_html=True)
+
+
+# 상단바 숨기기
+hide_decoration_bar_style = '''
+    <style>
+        header {height: 10.125rem;}
+    </style>
+'''
+st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
+
+@st.cache(allow_output_mutation=True)
+def Pageviews():
+    return []
+
+pageviews=Pageviews()
+pageviews.append('dummy')
+
+
+try:
+    st.markdown('방문자 수 : {}'.format(len(pageviews)))
+except ValueError:
+    st.markdown('방문자 수 : {}'.format(1))
+
 
 # rain
 rain(
@@ -47,7 +73,7 @@ option = st.sidebar.selectbox(
 (dict.keys()))
 
 
-sevendayago = datetime.today() - timedelta(7)
+sevendayago = datetime.today() - timedelta(17)
 
 start_date = st.sidebar.date_input('시작일', sevendayago)
 end_date = st.sidebar.date_input('종료일', datetime.today())
@@ -72,15 +98,36 @@ dr.reset_index(inplace=True)
 dr['Date'] = pd.to_datetime(dr['Date']).dt.date
 st.dataframe( dr)
 
-chart_data = alt.Chart(dr).mark_line(    
-    point={
-      "filled": True,
-      "fill": "red"
-    }).encode(
-    alt.X('Date', title='날짜', axis=alt.Axis(tickCount="day")),
-    alt.Y('Close', title='가격'),
-    tooltip='Close',
+
+
+
+
+
+# chart_data = alt.Chart(dr).mark_line(    
+#     point={
+#       "filled": True,
+#       "fill": "red"
+#     }).encode(
+#     alt.X('Date', title='날짜', axis=alt.Axis(tickCount="day")),
+#     alt.Y(['Close','Open'], title='가격'),
+#     tooltip='Close',
+# )
+
+
+chart_data = alt.Chart(dr).transform_fold(
+    ['Open', 'Close'],
+    as_=['Type', 'price']
+).mark_line(
+        point={
+       "filled": True,
+       "fill": "red"
+     }).encode(
+     alt.X('Date:T', title='날짜', axis=alt.Axis(tickCount="day")),
+     alt.Y('price:Q', title='가격'),
+    color='Type:N'
 )
+
+
 
 nearest = alt.selection(type='single', nearest=True, on='mouseover',
                         fields=['x'], empty='none')
@@ -92,8 +139,8 @@ st.altair_chart(chart_data, use_container_width=True)
 
 
 
-st.write('''마감 가격''')
-st.line_chart(dr.Close)
+# st.write('''마감 가격''')
+# st.line_chart(dr.Close)
 
-st.write('''거래량''')
-st.line_chart(dr.Volume)
+# st.write('''거래량''')
+# st.line_chart(dr.Volume)

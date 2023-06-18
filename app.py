@@ -38,7 +38,7 @@ hide_decoration_bar_style = '''
 '''
 st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
 
-@st.cache(allow_output_mutation=True)
+#@st.cache(allow_output_mutation=True)
 def Pageviews():
     return []
 

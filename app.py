@@ -38,7 +38,7 @@ hide_decoration_bar_style = '''
 '''
 st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
 
-#@st.cache(allow_output_mutation=True)
+@st.cache_data()
 def Pageviews():
     return []
 
@@ -65,7 +65,7 @@ yf.pdr_override()
 
 
 
-dict = {'삼성전자':'005930.KS', '한화시스템':'272210.KS', ' 한화오션션': '042660.KS'}
+dict = {'삼성전자':'005930.KS', '한화시스템':'272210.KS', '한화오션': '042660.KS'}
 
 
 option = st.sidebar.selectbox(
